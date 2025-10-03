@@ -1,0 +1,186 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ocpp-backend"
+version = "1.0.0"
+description = "OCPP Backend Module for Electric Vehicle Chargers"
+authors = [{name = "OCPP Implementation Team"}]
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30",
+    "websockets>=12",
+    "ocpp==0.20.*",
+    "asyncpg>=0.29.0",
+    "sqlalchemy>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "jinja2>=3.0.0",
+    "aiofiles>=23.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "bandit>=1.7.0",
+    "aiohttp>=3.8.0",
+]
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
+    "ARG",
+    "SIM",
+    "TCH",
+    "PIE",
+    "A",
+    "C90",
+    "DTZ",
+    "EM",
+    "EXE",
+    "FA",
+    "ISC",
+    "ICN",
+    "G",
+    "INP",
+    "T20",
+    "PYI",
+    "PT",
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SLOT",
+    "INT",
+    "PGH",
+    "PL",
+    "TRY",
+    "FLY",
+    "NPY",
+    "AIR",
+    "PERF",
+    "FURB",
+    "RUF",
+]
+ignore = [
+    "E501",
+    "B008",
+    "C901",
+    "W191",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D107",
+    "D203",
+    "D213",
+    "D215",
+    "D400",
+    "D401",
+    "D403",
+    "D404",
+    "D405",
+    "D406",
+    "D407",
+    "D408",
+    "D409",
+    "D410",
+    "D411",
+    "D412",
+    "D413",
+    "D414",
+    "D415",
+    "D416",
+    "D417",
+    "D418",
+    "D419",
+    "COM812",
+    "PLR6301",
+    "PLC0415",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*.py" = ["D", "S101", "PLR2004", "S108"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+force-single-line = false
+force-sort-within-sections = true
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+
+[tool.ruff.lint.pylint]
+max-args = 10
+max-branches = 20
+max-returns = 6
+max-statements = 50
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=app",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=80",
+    "--ignore=_data",
+    "--ignore=*/_data/*",
+]
+markers = [
+    "slow",
+    "integration",
+    "unit",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/migrations/*",
+    "*/_data/*",
+    "_data/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "test_*"]
+skips = ["B101", "B601"]
